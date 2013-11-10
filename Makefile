@@ -1,16 +1,14 @@
-OUT := pass
 CC := clang
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-
 .PHONY: all
-all: $(OUT)
+all: receive send
 
-$(OUT): $(OBJS)
-	$(CC) -o $(OUT) $^
+receive: receive.o register.o
+	$(CC) -o $@ $^
 
+send: send.o register.o
+	$(CC) -o $@ $^
 
 .PHONY: clean
 clean:
-	rm *.o $(OUT) -rf
+	rm *.o send receive -rf

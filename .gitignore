@@ -1,3 +1,4 @@
 *.o
-pass
-
+receive
+send
+config
