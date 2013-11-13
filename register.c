@@ -20,9 +20,6 @@ void gpio_init(){
   gpio = (unsigned int *)gpio_map;
 }
 
-#define GPIO_INPUT  0x0
-#define GPIO_OUTPUT 0x1
-
 void gpio_configure(int pin, int mode){
   int index = pin / 10;
   unsigned int mask = ~(0x7 << ((pin%10) * 3));
