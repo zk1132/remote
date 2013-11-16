@@ -1,5 +1,4 @@
 #include <time.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -7,19 +6,18 @@
 #include "register.h"
 
 #define BUF_SIZE (1024*1024)
-static char buf[BUF_SIZE];
-static int buf_index = 0;
-
-void last(int);
 
 int main(){
+  char buf[BUF_SIZE];
+  int buf_index = 0;
   int diff_usec = 13157;
+  int loop_second = 2;
+  int loop_count = (loop_second * 1000 * 1000) / (diff_usec / 1000);
   struct timespec start, end;
   int infrared_pulse = 1;
-  signal(SIGINT, last);
   gpio_init();
   gpio_configure(27, GPIO_INPUT);
-  while(1){
+  while(loop_count--){
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
     int pin = !gpio_read(27);
     buf[buf_index++] = (char)(pin + 48);
@@ -32,12 +30,8 @@ int main(){
     }
     infrared_pulse = 1 - infrared_pulse;
   }
+
+  buf[buf_index] = '\0';
+  puts(buf);
   return 0;
 }
-
-void last(int n){
-  int output = open("./config", O_WRONLY | O_CREAT);
-  write(output, buf, buf_index);
-  exit(0);
-}
-
